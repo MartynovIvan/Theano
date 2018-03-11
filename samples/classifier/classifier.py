@@ -86,7 +86,7 @@ if __name__ == "__main__":
             cost_sum += cost
             if (label == 1.0 and predicted_value >= 0.5) or (label == 0.0 and predicted_value < 0.5):
                 correct += 1
-        print "Epoch: " + str(epoch) + ", Training_cost: " + str(cost_sum) + ", Training_accuracy: " + str(float(correct) / len(data_train))
+        #print ( "Epoch: " + str(epoch) + ", Training_cost: " + str(cost_sum) + ", Training_accuracy: " + str(float(correct) / len(data_train)))
 
     # testing
     cost_sum = 0.0
@@ -96,4 +96,4 @@ if __name__ == "__main__":
         cost_sum += cost
         if (label == 1.0 and predicted_value >= 0.5) or (label == 0.0 and predicted_value < 0.5):
             correct += 1
-    print "Test_cost: " + str(cost_sum) + ", Test_accuracy: " + str(float(correct) / len(data_test))
+    #print "Test_cost: " + str(cost_sum) + ", Test_accuracy: " + str(float(correct) / len(data_test))

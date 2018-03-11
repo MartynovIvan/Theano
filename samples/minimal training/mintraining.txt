@@ -21,12 +21,14 @@ f = theano.function([x, target], y, updates=updates)
 for i in xrange(10):
     output = f([1.0, 1.0], 20.0)
     print output
+
 We create a second input variable called target, which will act as the target value we use for training:
 
 target = theano.tensor.fscalar('target')
 In order to train the model, we need a cost function. Here we use a simple squared distance from the target:
 
 cost = theano.tensor.sqr(target - y)
+
 Next, we want to calculate the partial gradients for the parameters that will be updated, with respect to the cost function. Luckily, Theano will do that for us. We simply call the grad function, pass in the real-valued cost and a list of all the variables we want gradients for, and it will return a list of those gradients:
 
 gradients = theano.tensor.grad(cost, [W])
