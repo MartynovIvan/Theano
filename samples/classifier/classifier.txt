@@ -1,0 +1,36 @@
+Classifier Code Example
+At this point, it’s time to move on to some more realistic examples.
+
+Take a look at the code for a very basic classifier, which tries to train a small network on a tiny (but real) dataset. I won’t walk you through it line-by-line any more; you’ve learned all the necessary parts by now and there are comments in the code as well.
+
+The task is to predict whether the GDP per capita for a country is more than the average GDP, based on the following features:
+
+Population density (per suqare km)
+Population growth rate (%)
+Urban population (%)
+Life expectancy at birth (years)
+Fertility rate (births per woman)
+Infant mortality (deaths per 1000 births)
+Enrolment in tertiary education (%)
+Unemployment (%)
+Estimated control of corruption (score)
+Estimated government effectiveness (score)
+Internet users (per 100 people)
+The data/ directory contains the files for training (121 countries) and testing (40 countries). Each row represents one country, the first column is the label, followed by the features. The feature values have been normalised, by subtracting the mean and dividing by the standard deviation. The label is 1 if the GDP is more than average, and 0 otherwise.
+
+Once you clone the github repository (or just download the data files), you can run the script with:
+
+python classifier.py data/countries-classify-gdp-normalised.train.txt data/countries-classify-gdp-normalised.test.txt
+The script will print information about 10 training epochs and the result on the test set:
+
+Epoch: 0, Training_cost: 28.4304042768, Training_accuracy: 0.578512396694
+Epoch: 1, Training_cost: 24.5186290354, Training_accuracy: 0.619834710744
+Epoch: 2, Training_cost: 22.1283727037, Training_accuracy: 0.619834710744
+Epoch: 3, Training_cost: 20.7941253329, Training_accuracy: 0.619834710744
+Epoch: 4, Training_cost: 19.9641569475, Training_accuracy: 0.619834710744
+Epoch: 5, Training_cost: 19.3749411377, Training_accuracy: 0.619834710744
+Epoch: 6, Training_cost: 18.8899216914, Training_accuracy: 0.619834710744
+Epoch: 7, Training_cost: 18.4006371608, Training_accuracy: 0.677685950413
+Epoch: 8, Training_cost: 17.7210185975, Training_accuracy: 0.793388429752
+Epoch: 9, Training_cost: 16.315597037, Training_accuracy: 0.876033057851
+Test_cost: 5.01800578051, Test_accuracy: 0.925

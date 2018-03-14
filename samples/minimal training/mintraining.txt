@@ -1,0 +1,62 @@
+(c) http://www.marekrei.com/blog/theano-tutorial/
+Minimal Training Example
+Here’s a minimal script for actually training something in Theano. We will be training the weights in W using gradient descent, so that the result from the model would be 20 instead of the original 0.9.
+
+import theano
+import numpy
+ 
+x = theano.tensor.fvector('x')
+target = theano.tensor.fscalar('target')
+ 
+W = theano.shared(numpy.asarray([0.2, 0.7]), 'W')
+y = (x * W).sum()
+ 
+cost = theano.tensor.sqr(target - y)
+gradients = theano.tensor.grad(cost, [W])
+W_updated = W - (0.1 * gradients[0])
+updates = [(W, W_updated)]
+ 
+f = theano.function([x, target], y, updates=updates)
+ 
+for i in xrange(10):
+    output = f([1.0, 1.0], 20.0)
+    print output
+We create a second input variable called target, which will act as the target value we use for training:
+
+target = theano.tensor.fscalar('target')
+In order to train the model, we need a cost function. Here we use a simple squared distance from the target:
+
+cost = theano.tensor.sqr(target - y)
+Next, we want to calculate the partial gradients for the parameters that will be updated, with respect to the cost function. Luckily, Theano will do that for us. We simply call the grad function, pass in the real-valued cost and a list of all the variables we want gradients for, and it will return a list of those gradients:
+
+gradients = theano.tensor.grad(cost, [W])
+Now let’s define a symbolic variable for what the updated version of the parameters will look like. Using gradient descent, the update rule is to subtract the gradient, multiplied by the learning rate:
+
+W_updated = W - (0.1 * gradients[0])
+And next we create a list of updates. More specifically, a list of tuples where the first element is the variable we want to update, and the second element is a variable containing the values that we want the first variable to contain after the update. This is just a syntax that Theano requires.
+
+updates = [(W, W_updated)]
+Have to define a Theano function again, with a couple of changes:
+
+f = theano.function([x, target], y, updates=updates)
+It now takes two input arguments – one for the input vector, and another for the target value used for training. And the list of updates also gets attached to the function as well. Every time this function is called, we pass in values for x and target, get back the value for y as output, and Theano performs all the updates in the update list.
+
+In order to train the parameters, we repeatedly call this function (10 times in this case). Normally, we’d pass in different examples from our training data, but for this example we use the same x=[1.0, 1.0] and target=20 each time:
+
+for i in xrange(10):
+    output = f([1.0, 1.0], 20.0)
+    print output
+When the script is executed, the output looks like this:
+
+0.9
+8.54
+13.124
+15.8744
+17.52464
+18.514784
+19.1088704
+19.46532224
+19.679193344
+19.8075160064
+The first time the function is called, the output value is still 0.9 (like in the previous example), because the updates have not been applied yet. But with each consecutive step, the output value becomes closer and closer to the desired target 20.77
+
