@@ -16,4 +16,5 @@ f = theano.function([x, target], y, updates=updates)
  
 for i in range(10):
     output = f([1.0, 1.0], 20.0)
-    print(output)
+    print("output=", output)
+    print("W=", W.get_value())

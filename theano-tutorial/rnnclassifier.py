@@ -66,7 +66,10 @@ class RnnClassifier(object):
             cost += l2_regularisation * (theano.tensor.sqr(m).sum())
 
         # calculating gradient descent updates based on the cost function
-        gradients = theano.tensor.grad(cost, self.params.values())
+        x = theano.shared(self.params.items())
+        """self.params.values()"""
+        print(self.params.items())
+        gradients = theano.tensor.grad(cost, x)
         updates = [(p, p - (learningrate * g)) for p, g in zip(self.params.values(), gradients)]
 
         # defining Theano functions for training and testing the network
@@ -83,13 +86,15 @@ class RnnClassifier(object):
 def _slice(M, slice_num, total_slices):
     """ Helper function for extracting a slice from a tensor"""
     if M.ndim == 3:
-        l = M.shape[2] / total_slices
+        l = M.shape[2] // total_slices
         return M[:, :, slice_num*l:(slice_num+1)*l]
     elif M.ndim == 2:
-        l = M.shape[1] / total_slices
+        l = M.shape[1] // total_slices
         return M[:, slice_num*l:(slice_num+1)*l]
     elif M.ndim == 1:
-        l = M.shape[0] / total_slices
+        l = M.shape[0] // total_slices
+        x = M[slice_num*l:(slice_num+1)*l]
+        print(M[slice_num*l:(slice_num+1)*l])
         return M[slice_num*l:(slice_num+1)*l]
 
 def read_dataset(path):
@@ -105,7 +110,7 @@ def read_dataset(path):
 
 def score_to_class_index(score, n_classes):
     """Maps a real-valued score between [0.0, 1.0] to a class id, given n_classes."""
-    for i in xrange(n_classes):
+    for i in range(n_classes):
         if score <= (i + 1.0) * (1.0 / float(n_classes)):
             return i
 
@@ -170,7 +175,7 @@ if __name__ == "__main__":
     rnn_classifier = RnnClassifier(len(word2id), n_classes)
 
     # training
-    for epoch in xrange(epochs):
+    for epoch in range(epochs):
         cost_sum = 0.0
         correct = 0
         for target_class, sentence in data_train:
@@ -178,8 +183,7 @@ if __name__ == "__main__":
             cost_sum += cost
             if predicted_class == target_class:
                 correct += 1
-        print "Epoch: " + str(epoch) + "\tCost: " + str(cost_sum) + "\tAccuracy: " + str(float(correct)/len(data_train))
-
+        print( "Epoch: " + str(epoch) + "\tCost: " + str(cost_sum) + "\tAccuracy: " + str(float(correct)/len(data_train)))
 
     # testing
     cost_sum = 0.0
@@ -189,4 +193,4 @@ if __name__ == "__main__":
         cost_sum += cost
         if predicted_class == target_class:
             correct += 1
-    print "Test_cost: " + str(cost_sum) + "\tTest_accuracy: " + str(float(correct)/len(data_test))
+    print ("Test_cost: " + str(cost_sum) + "\tTest_accuracy: " + str(float(correct)/len(data_test)))
